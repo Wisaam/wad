@@ -1,0 +1,24 @@
+#main
+{
+	margin: auto;
+	padding-top: 120px;
+	width: 400px;
+}
+p
+{
+	font-family: verdana;
+}
+.pet 
+{
+    margin-top: 8%;
+    border-radius: 15px;
+    box-shadow: 6px 6px 45px #fa0248;
+    border: 1px red dashed;
+    transition: box-shadow 0.4s ease-in-out;
+}
+
+.pet:hover
+{
+	box-shadow: 6px 6px 25px #fa0248;
+	cursor: pointer;
+}
