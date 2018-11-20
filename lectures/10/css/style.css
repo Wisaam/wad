@@ -8,13 +8,7 @@ div
 {
 	text-align:center;
 }
-
-html,body
-{
-	width: 1200px;
-}
-
-@media only screen and (min-width: 400px)
+@media only screen and (max-width: 400px)
 {
 	.col-1 {width: 8.33%;}
     .col-2 {width: 16.66%;}
