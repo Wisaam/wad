@@ -1,0 +1,26 @@
+* {
+    font-family: 'Old Standard TT', serif;
+}
+
+#todos ul {
+    list-style-type: none;
+}
+
+#todos li {
+    text-align: left;
+    display: inline;
+    cursor:pointer;
+}
+
+#todos button
+{
+	margin-right: 2%;
+}
+
+#todos li button {
+    float: right;
+}
+
+.done {
+    text-decoration: line-through;
+}
