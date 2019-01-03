@@ -1,6 +1,18 @@
 <?php
     require "../server/con_db.php";
     include_once "../server/functions.php";
+
+    if (isset($_GET['uploaded']))
+    {
+        if ($_GET['uploaded'] == 'true')
+        {
+            echo "<script> alert('Uploaded'); </script>";
+        }
+        else
+        {
+            echo "<script> alert('Unable to upload'); </script>";
+        }
+    }
 ?>
 
 <!DOCTYPE html>
@@ -21,7 +33,7 @@
 <body>
 <div class="container">
     <h1 class="text-center my-4"><i class="fas fa-plus fa-md"></i> <span class="d-none d-sm-inline"> Add New </span> Product </h1>
-    <form>
+    <form method="POST" action='../server/add_product.php'>
         <div class="row">
             <div class="d-none d-sm-block col-sm-3 col-md-4 col-lg-2 col-xl-2 mt-auto">
                 <label for="pro_title" class="float-md-right"> <span class="d-sm-none d-md-inline"> Product </span> Title:</label>
@@ -31,7 +43,7 @@
                     <div class="input-group-prepend">
                         <div class="input-group-text"><i class="fas fa-file-signature"></i></div>
                     </div>
-                    <input type="text" class="form-control" id="pro_title" name="pro_title" placeholder="Enter Product Title" >
+                    <input type="text" class="form-control" id="pro_title" name="pro_title" placeholder="Enter Product Title" required>
                 </div>
             </div>
             <div class="d-none d-sm-block col-sm-3 col-md-4 col-lg-2 col-xl-2 mt-auto">
@@ -43,13 +55,12 @@
                         <div class="input-group-text"><i class="fas fa-list-alt"></i></div>
                     </div>
                     <select class="form-control" id="pro_cat" name="pro_cat">
-                        <option>Select Category</option>
                         <?php
                             $rows = getCats($conn);
                             for ($var = 0; $var < mysqli_num_rows($rows); $var += 1)
                             {
                                 $row = mysqli_fetch_assoc($rows);
-                                echo "<option>".$row['cat_title']."</option>";
+                                echo "<option value=".$row['cat_id'].">".$row['cat_title']."</option>";
                             }
                         ?>
                     </select>
@@ -66,13 +77,12 @@
                         <div class="input-group-text"><i class="fas fa-stamp"></i></div>
                     </div>
                     <select class="form-control" id="pro_brand" name="pro_brand">
-                        <option>Select Brand</option>
                         <?php
                             $rows = getBrands($conn);
                             for ($var = 0; $var < mysqli_num_rows($rows); $var += 1)
                             {
                                 $row = mysqli_fetch_assoc($rows);
-                                echo "<option>".$row['brand_title']."</option>";
+                                echo "<option value=".$row['brand_id'].">".$row['brand_title']."</option>";
                             }
                         ?>
                     </select>
@@ -86,7 +96,7 @@
                     <div class="input-group-prepend">
                         <div class="input-group-text"><i class="far fa-image"></i></div>
                     </div>
-                    <input class="form-control" type="file" id="pro_img" name="pro_img">
+                    <input class="form-control" type="file" id="pro_img" name="pro_img" required>
                 </div>
             </div>
         </div>
@@ -99,7 +109,7 @@
                     <div class="input-group-prepend">
                         <div class="input-group-text"><i class="fas fa-money-bill"></i></div>
                     </div>
-                    <input class="form-control" id="pro_price" name="pro_price" placeholder="Enter Product Price">
+                    <input type="number" class="form-control" id="pro_price" name="pro_price" placeholder="Enter Product Price" required>
                 </div>
             </div>
             <div class="d-none d-sm-block col-sm-3 col-md-4 col-lg-2 col-xl-2 mt-auto">
@@ -110,7 +120,7 @@
                     <div class="input-group-prepend">
                         <div class="input-group-text"><i class="fas fa-key"></i></div>
                     </div>
-                    <input class="form-control" type="text" id="pro_kw" name="pro_kw" placeholder="Enter Product Keywords">
+                    <input class="form-control" type="text" id="pro_kw" name="pro_kw" placeholder="Enter Product Keywords" required>
                 </div>
             </div>
         </div>

@@ -74,7 +74,21 @@
                 		for ($var = 0; $var < mysqli_num_rows($rows); $var += 1)
                 		{
                 			$row = mysqli_fetch_assoc($rows);
-                			echo "<li> <a class = 'nav-link' href='#'>".$row['cat_title']."</a>";
+                            $active = "";
+                            $url = "";
+                            if (isset($_GET['cat']) && $_GET['cat'] == $row['cat_id'])
+                            {
+                                $active = "active";
+                                if (isset($_GET['brand']))
+                                    $url = "index.php?brand=".$_GET['brand'];
+                                else
+                                    $url = "index.php";
+                            }
+                            else if (isset($_GET['brand']))
+                                $url = "index.php?cat=".$row['cat_id']."&brand=".$_GET['brand'];
+                            else
+                                $url = "index.php?cat=".$row['cat_id'];
+                			echo "<li class = '".$active."'> <a class = 'nav-link' href='".$url."'>".$row['cat_title']."</a>";
                 		}
                 	?>
                 </ul>
@@ -90,7 +104,20 @@
                 		for ($var = 0; $var < mysqli_num_rows($rows); $var += 1)
                 		{
                 			$row = mysqli_fetch_assoc($rows);
-                			echo "<li> <a class = 'nav-link' href='#'>".$row['brand_title']."</a>";
+                            $active = "";
+                            if (isset($_GET['brand']) && $_GET['brand'] == $row['brand_id'])
+                            {
+                                $active = "active";
+                                if (isset($_GET['cat']))
+                                    $url = "index.php?cat=".$_GET['cat'];
+                                else
+                                    $url = "index.php";
+                            }
+                            else if (isset($_GET['cat']))
+                                $url = "index.php?brand=".$row['brand_id']."&cat=".$_GET['cat'];
+                            else
+                                $url = "index.php?brand=".$row['brand_id'];
+                			echo "<li class = '".$active."'> <a class = 'nav-link' href='".$url."'>".$row['brand_title']."</a>";
                 		}
                 	?>
                 </ul>
@@ -113,7 +140,110 @@
 
         <div class="row">
             <div class="col">
-                Content
+                
+                <?php
+                    if (!isset($_GET['brand']) && !isset($_GET['cat']))
+                    {
+                        $result = getAllProducts($conn);
+                        echo "Showing all products (select a category and/or product for more specific results): (".mysqli_num_rows($result)." results)<br>";
+                        echo "<table width=100%>
+                              <tr>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Brand</th>
+                                <th>Price</th>
+                                <th>Description</th>
+                              </tr>";
+                        for ($var = 0; $var < mysqli_num_rows($result); $var++)
+                        {
+                            $row = mysqli_fetch_assoc($result);
+                            echo "<tr>
+                                    <td>".$row['pro_title']."</td>
+                                    <td>".getCatName($conn, $row['pro_cat'])."</td>
+                                    <td>".getBrandName($conn, $row['pro_brand'])."</td>
+                                    <td>".$row['pro_price']."</td>
+                                    <td>".$row['pro_desc']."</td>
+                                  </tr>";
+                        }
+                        echo "</table>";
+                    }
+                    else if (isset($_GET['brand']) && !isset($_GET['cat']))
+                    {
+                        $result = getProductsByBrand($conn, $_GET['brand']);
+                        echo "Results for Brand: <b>".getBrandName($conn, $_GET['brand'])."</b>: (".mysqli_num_rows($result)." results)<br>"; 
+                        echo "<table width=100%>
+                              <tr>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Brand</th>
+                                <th>Price</th>
+                                <th>Description</th>
+                              </tr>";
+                        for ($var = 0; $var < mysqli_num_rows($result); $var++)
+                        {
+                            $row = mysqli_fetch_assoc($result);
+                            echo "<tr>
+                                    <td>".$row['pro_title']."</td>
+                                    <td>".getCatName($conn, $row['pro_cat'])."</td>
+                                    <td>".getBrandName($conn, $row['pro_brand'])."</td>
+                                    <td>".$row['pro_price']."</td>
+                                    <td>".$row['pro_desc']."</td>
+                                  </tr>";
+                        }
+                        echo "</table>";  
+                    }
+                    else if (!isset($_GET['brand']) && isset($_GET['cat']))
+                    {
+                        $result = getProductsByCat($conn, $_GET['cat']);
+                        echo "Results for Category: <b>".getCatName($conn, $_GET['cat'])."</b>: (".mysqli_num_rows($result)." results)<br>";
+                        echo "<table width=100%>
+                              <tr>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Brand</th>
+                                <th>Price</th>
+                                <th>Description</th>
+                              </tr>";
+                        for ($var = 0; $var < mysqli_num_rows($result); $var++)
+                        {
+                            $row = mysqli_fetch_assoc($result);
+                            echo "<tr>
+                                    <td>".$row['pro_title']."</td>
+                                    <td>".getCatName($conn, $row['pro_cat'])."</td>
+                                    <td>".getBrandName($conn, $row['pro_brand'])."</td>
+                                    <td>".$row['pro_price']."</td>
+                                    <td>".$row['pro_desc']."</td>
+                                  </tr>";
+                        }
+                        echo "</table>";
+                    }
+                    else
+                    {
+                        $result = getProductsByBrandCat($conn, $_GET['brand'], $_GET['cat']);
+                        echo "Results for Category: <b>".getCatName($conn, $_GET['cat'])."</b> and Brand: <b>".getBrandName($conn, $_GET['brand'])."</b>: (".mysqli_num_rows($result)." results)<br>";
+                        echo "<table width=100%>
+                              <tr>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Brand</th>
+                                <th>Price</th>
+                                <th>Description</th>
+                              </tr>";
+                        for ($var = 0; $var < mysqli_num_rows($result); $var++)
+                        {
+                            $row = mysqli_fetch_assoc($result);
+                            echo "<tr>
+                                    <td>".$row['pro_title']."</td>
+                                    <td>".getCatName($conn, $row['pro_cat'])."</td>
+                                    <td>".getBrandName($conn, $row['pro_brand'])."</td>
+                                    <td>".$row['pro_price']."</td>
+                                    <td>".$row['pro_desc']."</td>
+                                  </tr>";
+                        }
+                        echo "</table>";
+                    }
+                ?>
+
             </div>
         </div>
     </article>

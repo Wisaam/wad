@@ -2,7 +2,7 @@
 	$servername = "localhost";
 	$username = "root";
 	$password = "";
-	$dbname = "techbox";
+	$dbname = "tech_box_db";
 
 	$conn = mysqli_connect($servername, $username, $password, $dbname);
 
